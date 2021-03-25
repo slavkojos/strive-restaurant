@@ -1,5 +1,6 @@
 import React from 'react'
-import { ListGroup, Spinner } from 'react-bootstrap'
+import { Alert, ListGroup, Spinner } from 'react-bootstrap'
+import { format, parseISO } from 'date-fns'
 
 // render will be called ONCE after the constructor (for displaying the initial state of your component)
 // it will be called AGAIN every time there is a change in the state or in the props
@@ -17,6 +18,7 @@ class Reservations extends React.Component {
 
     state = {
         isLoading: true,
+        isError: false,
         reservations: []
     }
 
@@ -28,16 +30,24 @@ class Reservations extends React.Component {
         try {
             let response = await fetch('https://striveschool.herokuapp.com/api/reservation')
             console.log(response)
-            let reservations = await response.json()
-            console.log(reservations)
-            this.setState({
-                // reservations: reservations
-                reservations,
-                isLoading: false
-            })
+            if (response.ok) {
+                let reservations = await response.json()
+                console.log(reservations)
+                this.setState({
+                    // reservations: reservations
+                    reservations,
+                    isLoading: false
+                })
+            } else {
+                this.setState({
+                    isLoading: false,
+                    isError: true
+                })
+            }
         } catch (error) {
             this.setState({
-                isLoading: false
+                isLoading: false,
+                isError: true
             })
             console.log(error)
         }
@@ -60,13 +70,28 @@ class Reservations extends React.Component {
                     {/* here we'll put our map */}
                     {this.state.isLoading && (<Spinner animation="border" variant="success" />)}
 
-                    {!this.state.isLoading && this.state.reservations.length === 0 && <p>No reservations yet!</p>}
+                    {!this.state.isLoading
+                        && this.state.reservations.length === 0
+                        && !this.state.isError
+                        && <p>No reservations yet!</p>}
+
+                    {this.state.isError && (
+                        <Alert variant="danger">
+                            <Alert.Heading>Oh snap! You got an error!</Alert.Heading>
+                            <p>
+                                Change this and that and try again. Duis mollis, est non commodo
+                                luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.
+                                Cras mattis consectetur purus sit amet fermentum.
+                            </p>
+                        </Alert>
+                    )}
 
                     {this.state.reservations.map(res => (
                         <ListGroup key={res._id}>
                             <ListGroup.Item>
-                                From: {res.name}, for {res.numberOfPersons} people,
-                                at {res.dateTime}
+                                <p>From: {res.name}, for {res.numberOfPersons} people,</p>
+                                {/* <p>at {res.dateTime}</p> */}
+                                <p>at {format(parseISO(res.dateTime), 'yyyy-MMM-dd | HH:mm')}</p>
                             </ListGroup.Item>
                         </ListGroup>
                     ))}
