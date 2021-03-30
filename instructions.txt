@@ -1,0 +1,14 @@
+Conditional Rendering
+In these exercises you'll apply your skills creating new rendering conditions for the Strivestaurant project.
+Clone the repo to get started https://github.com/irvelervel/strivestaurant-feb21/tree/D4-Thu
+
+Strivestaurant
+Transform DishComments functional component into a class based one.
+In the ReservationForm component change the rendering method, returning the Alert when necessary or the Form otherwise with an if/else statement.
+Change NavBar component in a class-based one; create a constructor and log a message in the console as the component starts to render.
+In the DishComments component change the ternary operator with a short-circuit one; insert also a setTimeout function in the componentDidMount method to delay the setState by 1 sec.
+In the Home component, hide the DishComments component with a short-circuit operator if the selected dish name is "Amatriciana".
+In the Home component, show an alert component instead of the ReservationForm one if even a single a comment of the selected dish has a rating below 5.
+In Home.jsx give a "header" prop to the Reservations component. If present, this component should display it instead of the generic 'RESERVATIONS' in its h3.
+In the Home component use a ternary operator to replace the text inside the h1 and the p tags above the carousel with the values of the props "newTitle" and "newPayoff" respectively, if present.
+Change the "Strive for food" text in the navbar to "The perfect place for pasta lovers" if one of the elements in the props.links array contains the string "Alfredo".
